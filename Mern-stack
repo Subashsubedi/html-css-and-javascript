@@ -37,3 +37,64 @@ app.post('/subscribe', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
+
+
+app.js
+import React, { useState } from 'react';
+import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import axios from 'axios';
+
+export default function App() {
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+
+  const handleSubscribe = () => {
+    axios.post('http://localhost:5000/subscribe', { email })
+      .then(response => {
+        setMessage(response.data);
+      })
+      .catch(error => {
+        setMessage('Subscription failed.');
+      });
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Subscribe to our Newsletter</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter your email"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <Button title="Subscribe" onPress={handleSubscribe} />
+      {message ? <Text style={styles.message}>{message}</Text> : null}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 20,
+    paddingLeft: 8,
+  },
+  message: {
+    marginTop: 20,
+    textAlign: 'center',
+    color: 'green',
+  },
+});
